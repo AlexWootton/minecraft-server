@@ -1,0 +1,46 @@
+version: "3.7"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "true"
+      TYPE: PAPER
+      VERSION: 1.16.1
+      ENABLE_AUTOPAUSE: "true"
+      MAX_TICK_TIME: "-1"
+    command: --noconsole
+    ports:
+      - 25565:25565
+    volumes:
+      - ./data:/data
+    networks:
+      - mine-net
+  rcon:
+    image: itzg/rcon
+    environment:
+      RWA_ENVIRONMENT: "true"
+      RWA_ADMIN: "true"
+      RWA_RCON_PASSWORD: "minecraft"
+      RWA_RCON_HOST: "mc"
+      RWA_USERNAME: "admin"
+      RWA_PASSWORD: "password"
+      AUTOPAUSE_TIMEOUT_EST: "30"
+      AUTOPAUSE_TIMEOUT_INIT: "30"
+      AUTOPAUSE_TIMEOUT_KN: "30"
+      AUTOPAUSE_PERIOD: "10"
+    ports:
+      - 4326:4326
+      - 4327:4327
+    volumes:
+      - rcon:/opt/rcon-web-admin/db
+    networks:
+      - mine-net
+
+volumes:
+  mc-paper:
+  rcon:
+
+networks:
+  mine-net:
+    external: true
